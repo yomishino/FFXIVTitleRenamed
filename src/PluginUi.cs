@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -16,9 +17,12 @@ namespace TitleRenamed
         private bool newEntryDisplayed = true;
         private string? titleToRemove = null;
 
+        private int lastSavedEpoch = 0;
+        private static int CurrentEpoch => (int)(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalSeconds;
+
+
         //private static Vector2 UiTextBaseSize => ImGui.CalcTextSize("A");
         private static Vector2 UiBaseBoxSize => new(ImGui.GetTextLineHeightWithSpacing(), ImGui.GetTextLineHeightWithSpacing());
-
 
         private void DrawConfigUi()
         {
@@ -42,10 +46,18 @@ namespace TitleRenamed
 
             DrawConfigUiTitleRenameList();
 
-            // TODO: show saved text next to btn when saved
             if (ImGui.Button("Save Title Rename List"))
+            {
                 SaveConfig();
-
+                lastSavedEpoch = CurrentEpoch;
+            }
+            int sinceLastSaved = CurrentEpoch - lastSavedEpoch;
+            if (sinceLastSaved > 0 && sinceLastSaved < 4)
+            {
+                ImGui.SameLine();
+                ImGui.Text("List saved!");
+            }
+            
             // Config Ui Popups
             DrawConfgUiPopups();
 
