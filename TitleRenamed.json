@@ -6,5 +6,5 @@
   "RepoUrl": "https://github.com/yomishino/FFXIVTitleRenamed",
   "Tags": ["UI", "title", "nameplate"],
   "IconUrl": "",
-  "Changelog": "Prevent plugin from setting title to be displayed when the title is set to hidden somewhere else."
+  "Changelog": "Prevent plugin from setting title to be displayed when the title is set to hidden somewhere else.\nFix UI bugs."
 }

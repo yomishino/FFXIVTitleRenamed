@@ -58,9 +58,6 @@ namespace TitleRenamed
                 ImGui.Text("List saved!");
             }
 
-            // Check entry actions
-            CheckIfRemoveTitleRenameEntry();
-
             // Config Ui Popups
             DrawConfgUiPopups();
 
@@ -125,12 +122,12 @@ namespace TitleRenamed
                         if (entry.ToDisplay != display) entry.ToDisplay = display;
                         ImGui.TableNextColumn();
                         ImGui.PushItemWidth(-1);
-                        if (ImGui.Button("-", UiBaseBoxSize))
-                        {
+                        if (ImGui.Button($"-##{title}", UiBaseBoxSize))
                             titleToRemove = title;
-                        }
                         ImGui.PopItemWidth();
                     }
+                    // Check remove after enumeration
+                    CheckIfRemoveTitleRenameEntry();
                     // Use colour & tooltip to indicate if title not found
                     ImGui.TableNextRow();
                     // body: last row - add new
@@ -289,16 +286,16 @@ namespace TitleRenamed
                 ImGui.Columns(2);
                 if (ImGui.Button("Yes", PopupButtonDefaultSize))
                 {
+                    RemoveTitleRenameEntry();
                     configUiPopupRemoveEntryToOpen = false;
                     ImGui.CloseCurrentPopup();
-                    RemoveTitleRenameEntry();
                 }
                 ImGui.NextColumn();
                 if (ImGui.Button("No", PopupButtonDefaultSize))
                 {
+                    titleToRemove = null;
                     configUiPopupRemoveEntryToOpen = false;
                     ImGui.CloseCurrentPopup();
-                    titleToRemove = null;
                 }
                 ImGui.SetItemDefaultFocus();
                 ImGui.Columns(1);
