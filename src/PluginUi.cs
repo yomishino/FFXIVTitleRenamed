@@ -154,7 +154,7 @@ namespace TitleRenamed
 
         private static void DrawConfigUiTitleRenameListPrefixCombo(string label, ref int selected)
         {
-            ImGui.PushItemWidth(-1);
+            ImGui.PushItemWidth(UiBaseBoxSize.X * 3);
             ImGui.Combo(label, ref selected, "Prefix\0Suffix\0");
             if (ImGui.IsItemHovered())
                 ImGui.SetTooltip("Whether the renamed title is to be displayed as Prefix (before the name) or Suffix (after the name)");
