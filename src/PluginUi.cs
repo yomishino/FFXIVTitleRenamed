@@ -57,7 +57,10 @@ namespace TitleRenamed
                 ImGui.SameLine();
                 ImGui.Text("List saved!");
             }
-            
+
+            // Check entry actions
+            CheckIfRemoveTitleRenameEntry();
+
             // Config Ui Popups
             DrawConfgUiPopups();
 
@@ -125,7 +128,6 @@ namespace TitleRenamed
                         if (ImGui.Button("-", UiBaseBoxSize))
                         {
                             titleToRemove = title;
-                            CheckIfRemoveTitleRenameEntry();
                         }
                         ImGui.PopItemWidth();
                     }
@@ -195,8 +197,11 @@ namespace TitleRenamed
                     }
                 }
                 ImGui.EndListBox();
-                if (ImGui.IsItemActive())
+                // use ImGui.IsAnyItemActive() instead of ImGui.IsItemActive() works good
+                if (ImGui.IsAnyItemActive())
                     newEntryTitleInputMatchesToDraw = true;
+                else 
+                    newEntryTitleInputMatchesToDraw = false;
                 ImGui.PopItemWidth();
             }
         }
@@ -293,6 +298,7 @@ namespace TitleRenamed
                 {
                     configUiPopupRemoveEntryToOpen = false;
                     ImGui.CloseCurrentPopup();
+                    titleToRemove = null;
                 }
                 ImGui.SetItemDefaultFocus();
                 ImGui.Columns(1);
