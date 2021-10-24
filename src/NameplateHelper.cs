@@ -129,7 +129,7 @@ namespace TitleRenamed
                     }
                     title = renameEntry.TitleString.Ptr;
                     isPrefixTitle = renameEntry.IsPrefixTitle;
-                    displayTitle = renameEntry.ToDisplay;
+                    displayTitle = displayTitle && renameEntry.ToDisplay;   // prevent overriding to true when set to not displaying elsewhere
                     return true;
                 }
             }
