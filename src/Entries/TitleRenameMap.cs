@@ -100,7 +100,16 @@ namespace TitleRenamed.Entries
             return false;
         }
 
-        // TODO: edit renamed title
+        public bool TryEditRenamedTitle(string title, string renamed)
+        {
+            if (string.IsNullOrEmpty(title))
+                throw new ArgumentException("title is null or empty");
+            if (base.TryGetValue(title, out var entry))
+            {
+                entry.RenamedTitle = renamed;
+            }
+            return false;
+        }
 
         public new bool Remove(string title)
         {

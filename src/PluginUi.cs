@@ -105,6 +105,7 @@ namespace TitleRenamed
                                 ImGui.SetTooltip($"{title}\n\nThis title is not found in game data. \nYou may want to remove this entry.");
                         }
                         ImGui.TableNextColumn();
+                        // TODO: edit renamed title
                         ImGui.Text(entry.RenamedTitle);
                         if (ImGui.IsItemHovered() && entry.RenamedTitle != string.Empty) ImGui.SetTooltip(entry.RenamedTitle);
                         ImGui.TableNextColumn();

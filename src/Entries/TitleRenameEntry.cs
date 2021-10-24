@@ -5,7 +5,18 @@ namespace TitleRenamed.Entries
 {
     public class TitleRenameEntry : IDisposable
     {
-        public string RenamedTitle { get; private set; }
+        private string renamedTitle = null!;
+        public string RenamedTitle
+        {
+            get => renamedTitle;
+            internal set
+            {
+                renamedTitle = value ?? string.Empty;
+                if (TitleString != null && !TitleString.IsDisposed)
+                    TitleString.Dispose();
+                TitleString = ClientStringHelper.CreateSeStringForNamePlateTitle(RenamedTitle);
+            }
+        }
         public bool IsPrefixTitle { get; internal set; }
         public bool ToDisplay { get; internal set; }
         public bool RenameEnabled { get; internal set; }
