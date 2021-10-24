@@ -1,7 +1,7 @@
 ﻿{
   "Name": "Title Renamed",
   "Author": "yomishino",
-  "Punchline": "Check out my new title! ... Uhmm, renamed, I mean",
+  "Punchline": "Check out my new title! ... Uhmm, renamed, I mean.",
   "Description": "Rename a title displayed on the nameplate to something else.",
   "RepoUrl": "https://github.com/yomishino/FFXIVTitleRenamed",
   "Tags": ["UI", "title", "nameplate"],

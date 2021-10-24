@@ -25,11 +25,20 @@ namespace TitleRenamed
         private void ProcessCmdMainToggle(string command, string args)
         {
             if (string.IsNullOrWhiteSpace(args))
+            {
                 Enabled = !Enabled;
+                Util.PrintChat("Plugin " + (Enabled ? "enabled" : "disabled"), true);
+            }
             else if (args.Trim() == "on")
+            {
                 Enabled = true;
+                Util.PrintChat("Plugin " + (Enabled ? "enabled" : "disabled"), true);
+            }
             else if (args.Trim() == "off")
+            {
                 Enabled = false;
+                Util.PrintChat("Plugin " + (Enabled ? "enabled" : "disabled"), true);
+            }
             else
                 Util.PrintChatError($"{command}: Unknown command args: {args}");
         }

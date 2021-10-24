@@ -28,6 +28,13 @@ namespace TitleRenamed
             PluginLog.Error(msg);
         }
 
+        public static void PrintChat(string msg, bool prependPluginName = false)
+        {
+            if (prependPluginName)
+                msg = $"[Title Renamed] " + msg;
+            Plugin.ChatGui.Print(msg);
+        }
+
         public static void PrintChatError(string msg, bool prependPluginName = false)
         {
             if (prependPluginName)
