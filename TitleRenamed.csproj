@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <Authors>yomishino</Authors>
-    <Version>0.1.0.2</Version>
-    <Description>Rename a title displayed on the nameplate to something else.</Description>
+    <Version>0.1.1.0</Version>
+    <Description>Rename a title displayed on the nameplate to something else.
+Optionally, hide a specific title.</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <Configurations>Debug;Release;TestRelease</Configurations>
   </PropertyGroup>
@@ -71,6 +72,10 @@
       <HintPath Condition="Exists('$(DalamudLibPath)')">$(DalamudLibPath)\Reloaded.Hooks.Definitions.dll</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="res\img\" />
   </ItemGroup>
 
 </Project>
