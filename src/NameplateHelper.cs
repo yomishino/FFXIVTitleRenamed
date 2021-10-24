@@ -13,38 +13,6 @@ namespace TitleRenamed
 {
     internal sealed class NameplateHelper : IDisposable
     {
-        /*
-        private const ushort componentNodeNodeType = 1001;
-        private const uint nameplateNameNodeId = 3;
-
-        [Obsolete]
-        internal unsafe static void ReplaceNameplateText(string oldtext, string newtext)
-        {
-            AtkUnitBase* nameplate = (AtkUnitBase*)GetAddonNamePlate();
-            if (nameplate == null) return;
-            
-            for (int i = 0; i < nameplate->UldManager.NodeListCount; i++)
-            {
-                if (nameplate->UldManager.NodeList[i] == null) continue;
-                if ((ushort)nameplate->UldManager.NodeList[i]->Type == componentNodeNodeType)
-                {
-                    AtkComponentNode* node = nameplate->UldManager.NodeList[i]->GetAsAtkComponentNode();
-                    for (int j = 0; j < node->Component->UldManager.NodeListCount; j++)
-                    {
-                        AtkResNode* innernode = node->Component->UldManager.NodeList[j];
-                        if (innernode == null) continue;
-                        if (innernode->Type == NodeType.Text && innernode->NodeID == nameplateNameNodeId)
-                        {
-                            AtkTextNode* textnode = innernode->GetAsAtkTextNode();
-                            Utf8String str = textnode->NodeText;
-                            Util.LogDebug(str);
-                        }
-                    }
-                }
-            }
-        }
-        */
-
         private readonly TitleRenameMap renameMap;
 
         private const string SetNamePlateSignature = "48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 40 44 0F B6 E2";
