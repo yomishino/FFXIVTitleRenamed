@@ -32,9 +32,12 @@ namespace TitleRenamed
 
         public string Name =>
 #if DEBUG
-            true ? "Title Renamed [DEV]" :
-#endif
+            "Title Renamed [DEV]";
+#elif TEST
+            "Title Renamed [TEST]";
+#else
             "Title Renamed";
+#endif
 
         private readonly NameplateHelper npHelper = null!;
         private readonly TitleRenameMap renameMap = new();

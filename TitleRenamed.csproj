@@ -5,6 +5,7 @@
     <Version>0.1.0.0</Version>
     <Description>Rename a title displayed on the nameplate to something else.</Description>
     <PackageProjectUrl></PackageProjectUrl>
+    <Configurations>Debug;Release;TestRelease</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,6 +22,15 @@
   <PropertyGroup>
     <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
     <RepositoryUrl>https://github.com/yomishino/FFXIVTitleRenamed</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TestRelease|x64'">
+    <DefineConstants>TRACE;TEST</DefineConstants>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
