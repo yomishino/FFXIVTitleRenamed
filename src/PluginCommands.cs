@@ -4,22 +4,23 @@ namespace TitleRenamed
 {
     public partial class Plugin
     {
-        private const string cmdMainToggle = "/titlerenamed";
+        private const string cmdTitleRenamedMain = "/titlerenamed";
 
         private void AddCommands()
         {
-            CommandMgr.AddHandler(cmdMainToggle, new CommandInfo(ProcessCmdMainToggle)
+            CommandMgr.AddHandler(cmdTitleRenamedMain, new CommandInfo(ProcessCmdMainToggle)
             {
                 HelpMessage = 
-                    $"\n\t{cmdMainToggle}: Toggle whether to enable Title Renamed\n" +
-                    $"\t{cmdMainToggle} [on|off]: Enable/Disable Title Renamed",
+                    $"\n\t{cmdTitleRenamedMain}: Toggle whether to enable Title Renamed\n" +
+                    $"\t{cmdTitleRenamedMain} [on|off]: Enable/Disable Title Renamed\n" +
+                    $"\t{cmdTitleRenamedMain} config: Open Title Renamed configuration window",
                 ShowInHelp = true
             });
         }
 
         private static void RemoveCommands()
         {
-            CommandMgr.RemoveHandler(cmdMainToggle);
+            CommandMgr.RemoveHandler(cmdTitleRenamedMain);
         }
 
         private void ProcessCmdMainToggle(string command, string args)
@@ -38,6 +39,10 @@ namespace TitleRenamed
             {
                 Enabled = false;
                 Util.PrintChat("Plugin " + (Enabled ? "enabled" : "disabled"), true);
+            }
+            else if (args.Trim() == "config")
+            {
+                inConfig = true;
             }
             else
                 Util.PrintChatError($"{command}: Unknown command args: {args}");
