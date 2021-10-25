@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.String;
+﻿using FFXIVClientStructs.FFXIV.Client.System.Memory;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -44,5 +45,12 @@ namespace TitleRenamed.Strings
 
         public static SeStringWrapper CreateSeStringForNamePlateTitle(string titleText)
             => CreateSeString(TitleLeftBracket + titleText + TitleRightBracket);
+
+        internal unsafe static void DisposeClientSeStringAtPtr(IntPtr ptr)
+        {
+            SeString? s = GetSeStringFromPtr(ptr);
+            if (s!= null)
+                IMemorySpace.Free(ptr.ToPointer(), (ulong)s.Encode().Length);
+        }
     }
 }

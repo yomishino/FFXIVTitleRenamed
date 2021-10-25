@@ -80,9 +80,11 @@ namespace TitleRenamed
                     Util.LogError($"Renaming \"{oldTitle}\" to {renameEntry.RenamedTitle} failed: TitleString disposed");
                     return false;
                 }
+                IntPtr oldTitlePtr = title;
                 title = renameEntry.TitleString.Ptr;
                 isPrefixTitle = renameEntry.IsPrefixTitle;
                 displayTitle = displayTitle && renameEntry.ToDisplay;   // prevent overriding to true when set to not displaying elsewhere
+                ClientStringHelper.DisposeClientSeStringAtPtr(oldTitlePtr);
                 return true;
             }
             return false;
