@@ -2,12 +2,8 @@
 using TitleRenamed.Strings;
 
 using Dalamud.Hooking;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using System;
 
-using AddonNamePlate = FFXIVClientStructs.FFXIV.Client.UI.AddonNamePlate;
-using NamePlateObj = FFXIVClientStructs.FFXIV.Client.UI.AddonNamePlate.NamePlateObject;
-using NamePlateInfo = FFXIVClientStructs.FFXIV.Client.UI.RaptureAtkModule.NamePlateInfo;
 
 namespace TitleRenamed
 {
@@ -18,12 +14,8 @@ namespace TitleRenamed
         private const string SetNamePlateSignature = "48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 40 44 0F B6 E2";
         private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId);
         private readonly IntPtr SetNamePlatePtr;
-
-
-        private unsafe static AddonNamePlate* GetAddonNamePlate()
-            => (AddonNamePlate*)Plugin.GameGui.GetAddonByName("NamePlate", 1);
-
         private readonly Hook<SetNamePlateDelegate>? SetNamePlateHook;
+
 
         internal NameplateHelper(TitleRenameMap map)
         {
@@ -66,7 +58,7 @@ namespace TitleRenamed
             if (!displayTitle) return Original();
 
             string before = $"Before: \"{ClientStringHelper.GetSeStringFromPtr(title)?.TextValue ?? string.Empty}\", prefix:{isPrefixTitle}, display:{isPrefixTitle}";
-            bool modified = ModifyNamePlateTitle(namePlateObj, ref isPrefixTitle, ref displayTitle, ref title);
+            bool modified = ModifyNamePlateTitle(ref isPrefixTitle, ref displayTitle, ref title);
             string after = $"After: \"{ClientStringHelper.GetSeStringFromPtr(title)?.TextValue ?? string.Empty}\", prefix:{isPrefixTitle}, display:{isPrefixTitle}";
 #if DEBUG
             //if (modified)
@@ -76,57 +68,24 @@ namespace TitleRenamed
             return Original();
         }
 
-        private unsafe bool ModifyNamePlateTitle(IntPtr namePlateObj, ref bool isPrefixTitle, ref bool displayTitle, ref IntPtr title)
+        private unsafe bool ModifyNamePlateTitle(ref bool isPrefixTitle, ref bool displayTitle, ref IntPtr title)
         {
-            if (GetAddonNamePlate() == null) return false;
-            if (namePlateObj == IntPtr.Zero) return false;
-
-            NamePlateObj* npObj = (NamePlateObj*)namePlateObj;
-            NamePlateInfo* info = GetNamePlateInfo(namePlateObj);
-            if (info != null)
+            string oldTitle = ClientStringHelper.GetSanitizedTitleFromSeStringPtr(title);
+            if (renameMap.TryGetValue(oldTitle, out var renameEntry))
             {
-                string oldTitle = ClientStringHelper.GetRawString(info->Title);
-                if (renameMap.TryGetValue(oldTitle, out var renameEntry))
+                if (renameEntry == null) return false;    // just in case; shouldnt be null here
+                if (!renameEntry.RenameEnabled) return false;
+                if (renameEntry.TitleString.IsDisposed)
                 {
-                    if (renameEntry == null) return false;    // just in case; shouldnt be null here
-                    if (!renameEntry.RenameEnabled) return false;
-                    if (renameEntry.TitleString.IsDisposed)
-                    {
-                        Util.LogError($"Renaming \"{oldTitle}\" to {renameEntry.RenamedTitle} failed: TitleString disposed");
-                        return false;
-                    }
-                    title = renameEntry.TitleString.Ptr;
-                    isPrefixTitle = renameEntry.IsPrefixTitle;
-                    displayTitle = displayTitle && renameEntry.ToDisplay;   // prevent overriding to true when set to not displaying elsewhere
-                    return true;
+                    Util.LogError($"Renaming \"{oldTitle}\" to {renameEntry.RenamedTitle} failed: TitleString disposed");
+                    return false;
                 }
-            }
-            else
-            {
-                // TODO: do we need to handle this case?
-                Util.LogWarning($"No info found for {ClientStringHelper.GetRawString(npObj->NameText->NodeText, true)}");
+                title = renameEntry.TitleString.Ptr;
+                isPrefixTitle = renameEntry.IsPrefixTitle;
+                displayTitle = displayTitle && renameEntry.ToDisplay;   // prevent overriding to true when set to not displaying elsewhere
+                return true;
             }
             return false;
-        }
-
-
-        // Get the NamePlateInfo associated with the NamePlateObj
-        private unsafe static NamePlateInfo* GetNamePlateInfo(IntPtr npObj)
-        {
-            AddonNamePlate* npAddon = GetAddonNamePlate();
-            if (npAddon == null) return null;
-            var npObj0 = npAddon->NamePlateObjectArray;
-            long idx = ((long)npObj - (long)npObj0) / sizeof(NamePlateObj);
-            if (idx >= 0 && idx < 50)
-            {
-                RaptureAtkModule* r = ((UIModule*)Plugin.GameGui.GetUIModule())->GetRaptureAtkModule();
-                if (r == null) return null;
-                var infoArray = &r->NamePlateInfoArray;
-                return &infoArray[(int)idx];
-            }
-            else
-                Util.LogError($"Cannot get associated NamePlateInfo for NamePlateObj@{(long)npObj:X}, where 0th is @{(long)npObj0:X}; calculated idx = {idx}");
-            return null;
         }
 
         public void Dispose()

@@ -30,6 +30,11 @@ namespace TitleRenamed.Strings
             return SeString.Parse(bytes);
         }
 
+        public unsafe static string GetSanitizedTitleFromSeStringPtr(IntPtr ptr)
+            => ptr == IntPtr.Zero 
+            ? string.Empty 
+            : (GetSeStringFromPtr(ptr)?.TextValue.Trim(TitleLeftBracket).Trim(TitleRightBracket) ?? string.Empty);
+
         public static SeStringWrapper CreateSeString(string text)
         {
             if (text == null)
