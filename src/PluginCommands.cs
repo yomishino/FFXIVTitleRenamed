@@ -12,7 +12,7 @@ namespace TitleRenamed
             {
                 HelpMessage = 
                     $"\n\t{cmdTitleRenamedMain}: Toggle whether to enable Title Renamed\n" +
-                    $"\t{cmdTitleRenamedMain} [on|off]: Enable/Disable Title Renamed\n" +
+                    $"\t{cmdTitleRenamedMain} {{on|off}}: Enable/Disable Title Renamed\n" +
                     $"\t{cmdTitleRenamedMain} config: Open Title Renamed configuration window",
                 ShowInHelp = true
             });
