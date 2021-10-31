@@ -1,13 +1,13 @@
 # Title Renamed
 
-A FFXIV Dalamud plugin to rename a title displayed on the nameplate to something else.
+A FFXIV Dalamud plugin to rename a title displayed on the nameplates to something else.
 
-Optionally, hide a specific title from the nameplate.
+Optionally, hide a specific title from the nameplates.
 
 To be used with [XIVLauncher](https://github.com/goatcorp/FFXIVQuickLauncher).
 
-(NOTE: this plugin only make changes to how title is displayed on the nameplate. 
-It does not changes anything else regarding the title.
+(NOTE: this plugin only make changes to how title is displayed on the nameplates. 
+It does not changes anything else regarding the titles.
 So in all other places the titles will remain unchanged.)
 
 
@@ -15,8 +15,8 @@ So in all other places the titles will remain unchanged.)
 
 [XIVLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) is required to install and run the plugin.
 
-Add my [Dalamud plugin repo](https://github.com/yomishino/DalamudPlugins) to Dalamud's Custom Plugin Repositories,
-see [here](https://github.com/yomishino/DalamudPlugins#readme) for details.
+Add my [Dalamud plugin repo](https://github.com/yomishino/DalamudPlugins) to Dalamud's Custom Plugin Repositories.
+See [here](https://github.com/yomishino/DalamudPlugins#readme) for details.
 
 Once added, look for the plugin "Title Renamed" in Plugin Installer's available plugins.
 
@@ -24,7 +24,7 @@ Once added, look for the plugin "Title Renamed" in Plugin Installer's available 
 ## How to Use
 
 Open Title Renamed Configuration window through the Plugin Installer, 
-or enter in chat the text command `/titlerenamed config` to open it.
+or enter in game chat the text command `/titlerenamed config` to open it.
 
 Add, modify or remove title renaming entries in Configuration.
 
@@ -48,7 +48,7 @@ where all added entries will be listed in it.
 
 The last row of the list has input text boxes and so on for adding a new entry.
 
-If you can't see the list, click on the "__▶ Title Rename List__" to make it appear.
+_If you can't see the list, click on the "__▶ Title Rename List__" to make it appear._
 
 You can add, remove or configure entries in the list here.
 Effect of changes should take place immediately, although sometimes you may need to wait a bit 
@@ -62,20 +62,21 @@ _To add an entry_, type in the original title in the first input box,
 and type in the new title, that is, the text that you want the original title to be renamed to, in the second input text box.
 (The new title can be empty, especially if you just want to add an entry to hide a specific title.)
 Change the additional settings for the entry (see [Configuraing Rename Entries](#configuring-rename-entries) below) if applicable.
-Then click the "+" button on the right.
+Then click the "__+__" button on the right.
 
-_To remove an entry_, click the "-" button to the right of that entry.
+_To remove an entry_, click the "__-__" button to the right of that entry.
 
 ### Configuring Rename Entries
 
 You can configure each entry on the following options:
  - __Enable/Disable__ individual entry: Check/uncheck the box to the left of each entry to enable/disable just for that entry;
- - __Prefix/Suffix__: Choose whether to display the title as a prefix or suffix title; 
+ - __Prefix/Suffix__: Choose whether to display the renamed title as a prefix or suffix title; 
  - __Display__: Check/uncheck the box to set whether to display the title on the nameplates.
 
  These options can be changed after the entries have been added to the Title Rename List.
 
-### Available Text Commands and Arguments
+
+## Available Text Commands and Arguments
 
 - `/titlerenamed`: Toggle whether to enable the plugin
 - `/titlerenamed on`: Enable the plugin
