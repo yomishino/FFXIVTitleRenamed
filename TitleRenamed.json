@@ -6,5 +6,6 @@
   "RepoUrl": "https://github.com/yomishino/FFXIVTitleRenamed",
   "Tags": [ "UI", "title", "nameplate" ],
   "IconUrl": "https://raw.githubusercontent.com/yomishino/FFXIVTitleRenamed/master/res/img/icon.png",
-  "Changelog": "Text command to open configuration window"
+  "Changelog": "Text command to open configuration window",
+  "DalamudApiLevel": 5
 }
