@@ -15,8 +15,7 @@ So in all other places the titles will remain unchanged.)
 
 [XIVLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) is required to install and run the plugin.
 
-Add my [Dalamud plugin repo](https://github.com/yomishino/DalamudPlugins) to Dalamud's Custom Plugin Repositories.
-See [here](https://github.com/yomishino/DalamudPlugins#readme) for details.
+Add my [Dalamud plugin repo](https://github.com/yomishino/MyDalamudPlugins) to Dalamud's Custom Plugin Repositories.
 
 Once added, look for the plugin "Title Renamed" in Plugin Installer's available plugins.
 
