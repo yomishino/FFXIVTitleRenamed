@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
@@ -56,6 +57,31 @@ namespace TitleRenamed
             {
                 ImGui.SameLine();
                 ImGui.Text("List saved!");
+            }
+
+            ImGui.NewLine();
+            ImGui.Checkbox("Show Sponsor/Support button", ref config.ShowSponsor);
+            if (config.ShowSponsor)
+            {
+                ImGui.Indent();
+                ImGui.PushStyleColor(ImGuiCol.Button, 0xFF000000 | 0x005E5BFF);
+                ImGui.PushStyleColor(ImGuiCol.ButtonActive, 0xDD000000 | 0x005E5BFF);
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, 0xAA000000 | 0x005E5BFF);
+                var sponsorButton = ImGui.Button("Buy Yomishino a Coffee");
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip(
+                        "You can support me and buy me a coffee if you want.\n" +
+                        "(Will open external link to Ko-fi in your browser)");
+                if (sponsorButton)
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "https://ko-fi.com/yomishino",
+                        UseShellExecute = true
+                    });
+                }
+                ImGui.PopStyleColor(3);
+                ImGui.Unindent();
             }
 
             // Config Ui Popups

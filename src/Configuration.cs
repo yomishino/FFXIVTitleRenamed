@@ -12,5 +12,7 @@ namespace TitleRenamed
 
         public bool AutoEnableOnStart { get; set; } = false;
         public TitleRenameSaveEntry[]? TitleRenameArray = null;
+
+        public bool ShowSponsor = false;
     }
 }
