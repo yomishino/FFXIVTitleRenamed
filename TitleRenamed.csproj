@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Authors>yomishino</Authors>
-    <Version>1.0.4.0</Version>
+    <Version>1.0.4.1</Version>
     <Description>Rename a title displayed on the nameplate to something else.
 Optionally, hide a specific title.</Description>
     <PackageProjectUrl></PackageProjectUrl>
@@ -10,7 +10,7 @@ Optionally, hide a specific title.</Description>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -35,7 +35,7 @@ Optionally, hide a specific title.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.5" />
+    <PackageReference Include="DalamudPackager" Version="2.1.8" />
     <Reference Include="Dalamud">
       <HintPath Condition="Exists('$(DalamudLibPath)')">$(DalamudLibPath)\Dalamud.dll</HintPath>
       <Private>false</Private>
