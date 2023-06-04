@@ -11,8 +11,10 @@ namespace TitleRenamed
     {
         private readonly TitleRenameMap renameMap;
 
-        private const string SetNamePlateSignature = "48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 40 44 0F B6 E2";
-        private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId);
+        //private const string SetNamePlateSignature = "48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 40 44 0F B6 E2";
+        //private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId);
+        private const string SetNamePlateSignature = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 5C 24 ?? 45 38 BE";
+        private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId);
         private readonly IntPtr SetNamePlatePtr;
         private readonly Hook<SetNamePlateDelegate>? SetNamePlateHook;
 
@@ -47,10 +49,10 @@ namespace TitleRenamed
             }
         }
 
-        private unsafe IntPtr SetNamePlateDetour(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId)
+        private unsafe IntPtr SetNamePlateDetour(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId)
         {
             IntPtr Original()
-                => SetNamePlateHook!.Original(namePlateObj, isPrefixTitle, displayTitle, title, name, fc, iconId);
+                => SetNamePlateHook!.Original(namePlateObj, isPrefixTitle, displayTitle, title, name, fc, prefix, iconId);
 
             if (namePlateObj == IntPtr.Zero) return Original();
             if (title == IntPtr.Zero) return Original();
@@ -61,8 +63,8 @@ namespace TitleRenamed
             bool modified = ModifyNamePlateTitle(ref isPrefixTitle, ref displayTitle, ref title);
             string after = $"After: \"{ClientStringHelper.GetSeStringFromPtr(title)?.TextValue ?? string.Empty}\", prefix:{isPrefixTitle}, display:{isPrefixTitle}";
 #if DEBUG
-            //if (modified)
-            //    Util.LogDebug($"Modifying nameplate title:\n\t{before}\n\t{after}");
+            if (modified)
+                Util.LogDebug($"Modifying nameplate title:\n\t{before}\n\t{after}");
 #endif 
 
             return Original();

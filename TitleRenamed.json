@@ -7,6 +7,6 @@
   "Tags": [ "UI", "title", "nameplate" ],
   "CategoryTags":  ["UI", "Other"],
   "IconUrl": "https://raw.githubusercontent.com/yomishino/FFXIVTitleRenamed/master/res/img/icon.png",
-  "Changelog": "Patch 6.3 update",
+  "Changelog": "Patch 6.4 update",
   "DalamudApiLevel": 8
 }
