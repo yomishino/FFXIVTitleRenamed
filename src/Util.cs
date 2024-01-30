@@ -1,4 +1,4 @@
-﻿using TitleRenamed.Strings;
+using TitleRenamed.Strings;
 
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.String;
@@ -10,7 +10,7 @@ namespace TitleRenamed
     {
         public static void LogDebug(string msg)
         {
-            PluginLog.Debug(msg);
+            Plugin.PluginLog.Debug(msg);
         }
 
         public unsafe static void LogDebug(Utf8String str)
@@ -20,12 +20,12 @@ namespace TitleRenamed
 
         public static void LogWarning(string msg)
         {
-            PluginLog.Warning(msg);
+            Plugin.PluginLog.Warning(msg);
         }
 
         public static void LogError(string msg)
         {
-            PluginLog.Error(msg);
+            Plugin.PluginLog.Error(msg);
         }
 
         public static void PrintChat(string msg, bool prependPluginName = false)

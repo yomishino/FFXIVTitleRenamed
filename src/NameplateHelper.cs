@@ -1,8 +1,10 @@
-﻿using TitleRenamed.Entries;
+using TitleRenamed.Entries;
 using TitleRenamed.Strings;
 
 using Dalamud.Hooking;
 using System;
+using Dalamud.Utility.Signatures;
+using Dalamud.Plugin.Services;
 
 
 namespace TitleRenamed
@@ -15,15 +17,13 @@ namespace TitleRenamed
         //private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId);
         private const string SetNamePlateSignature = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 5C 24 ?? 45 38 BE";
         private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId);
-        private readonly IntPtr SetNamePlatePtr;
+        [Signature(SetNamePlateSignature, DetourName = nameof(SetNamePlateDetour))]
         private readonly Hook<SetNamePlateDelegate>? SetNamePlateHook;
 
 
         internal NameplateHelper(TitleRenameMap map)
         {
             renameMap = map ?? throw new ArgumentNullException(paramName: nameof(map));
-            SetNamePlatePtr = Plugin.SigScanner.ScanText(SetNamePlateSignature);
-            SetNamePlateHook = new Hook<SetNamePlateDelegate>(SetNamePlatePtr, SetNamePlateDetour);
         }
 
         internal void EnableHook()
