@@ -1,6 +1,4 @@
 using TitleRenamed.Strings;
-
-using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 
 

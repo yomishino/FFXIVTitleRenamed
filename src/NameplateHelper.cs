@@ -1,10 +1,8 @@
 using TitleRenamed.Entries;
 using TitleRenamed.Strings;
-
 using Dalamud.Hooking;
-using System;
 using Dalamud.Utility.Signatures;
-using Dalamud.Plugin.Services;
+using System;
 
 
 namespace TitleRenamed
@@ -13,8 +11,6 @@ namespace TitleRenamed
     {
         private readonly TitleRenameMap renameMap;
 
-        //private const string SetNamePlateSignature = "48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 40 44 0F B6 E2";
-        //private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, int iconId);
         private const string SetNamePlateSignature = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 5C 24 ?? 45 38 BE";
         private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId);
         [Signature(SetNamePlateSignature, DetourName = nameof(SetNamePlateDetour))]

@@ -1,12 +1,7 @@
 using TitleRenamed.Entries;
-using Dalamud.Data;
-using Dalamud.Game;
-using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
-using Dalamud.IoC;
 using Dalamud.Plugin;
-using System;
 using Dalamud.Plugin.Services;
+using System;
 
 namespace TitleRenamed
 {
