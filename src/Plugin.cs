@@ -1,4 +1,4 @@
-﻿using TitleRenamed.Entries;
+using TitleRenamed.Entries;
 using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.Command;
@@ -6,29 +6,18 @@ using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using System;
+using Dalamud.Plugin.Services;
 
 namespace TitleRenamed
 {
     public partial class Plugin : IDalamudPlugin
     {
-        [PluginService]
-        [RequiredVersion("1.0")]
         internal static DalamudPluginInterface PluginInterface { get; private set; } = null!;
-        [PluginService]
-        [RequiredVersion("1.0")]
-        internal static SigScanner SigScanner { get; private set; } = null!;
-        [PluginService]
-        [RequiredVersion("1.0")]
-        internal static CommandManager CommandMgr { get; private set; } = null!;
-        [PluginService]
-        [RequiredVersion("1.0")]
-        internal static DataManager DataMgr { get; private set; } = null!;
-        [PluginService]
-        [RequiredVersion("1.0")]
-        internal static GameGui GameGui { get; private set; } = null!;
-        [PluginService]
-        [RequiredVersion("1.0")]
-        internal static ChatGui ChatGui { get; private set; } = null!;
+        internal static ICommandManager CommandMgr { get; private set; } = null!;
+        internal static IDataManager DataMgr { get; private set; } = null!;
+        internal static IGameGui GameGui { get; private set; } = null!;
+        internal static IChatGui ChatGui { get; private set; } = null!;
+        internal static IPluginLog PluginLog { get; private set; } = null!;
 
         public string Name =>
 #if DEBUG
@@ -39,7 +28,7 @@ namespace TitleRenamed
             "Title Renamed";
 #endif
 
-        private readonly NameplateHelper npHelper = null!;
+        private readonly NameplateHelper npHelper;
         private readonly TitleRenameMap renameMap = new();
         private readonly Configuration config = null!;
 
@@ -58,11 +47,26 @@ namespace TitleRenamed
         }
         private bool inConfig = false;
 
-        public Plugin()
+        public Plugin(DalamudPluginInterface _dalamudPluginInterface,
+            ICommandManager _commandManager,
+            IDataManager _dataManager,
+            IGameGui _gameGui,
+            IChatGui _chatGui,
+            IPluginLog _pluginLog,
+            IGameInteropProvider _gameInteropProvider)
         {
+            PluginInterface = _dalamudPluginInterface;
+            CommandMgr = _commandManager;
+            DataMgr = _dataManager;
+            GameGui = _gameGui;
+            ChatGui = _chatGui;
+            PluginLog = _pluginLog;
+
             this.config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
+
             npHelper = new(renameMap);
+            _gameInteropProvider.InitializeFromAttributes(npHelper);
 
             AddCommands();
 

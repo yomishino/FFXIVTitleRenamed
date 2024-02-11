@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +19,7 @@ namespace TitleRenamed
         private string? titleToRemove = null;
 
         private int lastSavedEpoch = 0;
-        private static int CurrentEpoch => (int)(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)).TotalSeconds;
+        private static int CurrentEpoch => (int)(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds;
 
 
         //private static Vector2 UiTextBaseSize => ImGui.CalcTextSize("A");
