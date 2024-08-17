@@ -29,8 +29,7 @@ namespace TitleRenamed.Entries
         {
             if (string.IsNullOrEmpty(title))
                 throw new ArgumentException("title is null or empty");
-            if (entry == null)
-                throw new ArgumentNullException(paramName: nameof(entry));
+            ArgumentNullException.ThrowIfNull(entry);
             base.Add(title, entry);
         }
 
@@ -38,8 +37,7 @@ namespace TitleRenamed.Entries
         {
             if (string.IsNullOrEmpty(title))
                 throw new ArgumentException("title is null or empty");
-            if (entry == null)
-                throw new ArgumentNullException(paramName: nameof(entry));
+            ArgumentNullException.ThrowIfNull(entry);
             return base.TryAdd(title, entry);
         }
 
@@ -111,22 +109,9 @@ namespace TitleRenamed.Entries
             return false;
         }
 
-        public new bool Remove(string title)
-        {
-            bool removed = base.Remove(title, out var entry);
-            if (removed && entry != null)
-                entry.Dispose();
-            return removed;
-        }
+        public new bool Remove(string title) => base.Remove(title);
 
-        public new void Clear()
-        {
-            foreach (var entry in this.Values)
-            {
-                entry?.Dispose();
-            }
-            base.Clear();
-        }
+        public new void Clear() => base.Clear();
 
         public void Dispose() => Clear();
     }

@@ -1,96 +1,75 @@
+using System;
+using System.Collections.Generic;
+
+using Dalamud.Plugin.Services;
+using Dalamud.Game.Gui.NamePlate;
 using TitleRenamed.Entries;
 using TitleRenamed.Strings;
-using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
-using System;
-
 
 namespace TitleRenamed
 {
     internal sealed class NameplateHelper : IDisposable
     {
         private readonly TitleRenameMap renameMap;
+        private readonly INamePlateGui nameplateGui;
+        private readonly IClientState clientState;
 
-        private const string SetNamePlateSignature = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 5C 24 ?? 45 38 BE";
-        private delegate IntPtr SetNamePlateDelegate(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId);
-        [Signature(SetNamePlateSignature, DetourName = nameof(SetNamePlateDetour))]
-        private readonly Hook<SetNamePlateDelegate>? SetNamePlateHook;
+        public bool ignoreUpdates = false;
 
-
-        internal NameplateHelper(TitleRenameMap map)
+        internal NameplateHelper(TitleRenameMap map, INamePlateGui _nameplateGui, IClientState _clientState)
         {
+            nameplateGui = _nameplateGui;
+            clientState = _clientState;
             renameMap = map ?? throw new ArgumentNullException(paramName: nameof(map));
+
+            nameplateGui.OnNamePlateUpdate += OnNameplateUpdate;
         }
 
-        internal void EnableHook()
+        private void OnNameplateUpdate(INamePlateUpdateContext context, IReadOnlyList<INamePlateUpdateHandler> handlers)
         {
-            if (SetNamePlateHook == null || SetNamePlateHook.IsDisposed)
-                throw new InvalidOperationException("SetNamePlateHook not set up or is disposed");
-            SetNamePlateHook.Enable();
-        }
-
-        internal void DisableHook()
-        {
-            if (SetNamePlateHook == null || SetNamePlateHook.IsDisposed)
-                throw new InvalidOperationException("SetNamePlateHook not set up or is disposed");
-            SetNamePlateHook.Disable();
-        }
-
-        private void DisposeHook()
-        {
-            if (SetNamePlateHook != null && !SetNamePlateHook.IsDisposed)
+            if (ignoreUpdates || context.AddonAddress == nint.Zero || clientState.LocalPlayer is not { } player)
             {
-                SetNamePlateHook.Disable();
-                SetNamePlateHook.Dispose();
+                return;
             }
-        }
-
-        private unsafe IntPtr SetNamePlateDetour(IntPtr namePlateObj, bool isPrefixTitle, bool displayTitle, IntPtr title, IntPtr name, IntPtr fc, IntPtr prefix, int iconId)
-        {
-            IntPtr Original()
-                => SetNamePlateHook!.Original(namePlateObj, isPrefixTitle, displayTitle, title, name, fc, prefix, iconId);
-
-            if (namePlateObj == IntPtr.Zero) return Original();
-            if (title == IntPtr.Zero) return Original();
-
-            if (!displayTitle) return Original();
-
-            string before = $"Before: \"{ClientStringHelper.GetSeStringFromPtr(title)?.TextValue ?? string.Empty}\", prefix:{isPrefixTitle}, display:{isPrefixTitle}";
-            bool modified = ModifyNamePlateTitle(ref isPrefixTitle, ref displayTitle, ref title);
-            string after = $"After: \"{ClientStringHelper.GetSeStringFromPtr(title)?.TextValue ?? string.Empty}\", prefix:{isPrefixTitle}, display:{isPrefixTitle}";
-#if DEBUG
-            if (modified)
-                Util.LogDebug($"Modifying nameplate title:\n\t{before}\n\t{after}");
-#endif 
-
-            return Original();
-        }
-
-        private unsafe bool ModifyNamePlateTitle(ref bool isPrefixTitle, ref bool displayTitle, ref IntPtr title)
-        {
-            string oldTitle = ClientStringHelper.GetSanitizedTitleFromSeStringPtr(title);
-            if (renameMap.TryGetValue(oldTitle, out var renameEntry))
+            foreach (var handler in handlers)
             {
-                if (renameEntry == null) return false;    // just in case; shouldnt be null here
-                if (!renameEntry.RenameEnabled) return false;
-                if (renameEntry.TitleString.IsDisposed)
+                if (handler.NamePlateKind is not NamePlateKind.PlayerCharacter || handler.GameObjectId != player.GameObjectId)
                 {
-                    Util.LogError($"Renaming \"{oldTitle}\" to {renameEntry.RenamedTitle} failed: TitleString disposed");
-                    return false;
+                    continue;
                 }
-                IntPtr oldTitlePtr = title;
-                title = renameEntry.TitleString.Ptr;
-                isPrefixTitle = renameEntry.IsPrefixTitle;
-                displayTitle = displayTitle && renameEntry.ToDisplay;   // prevent overriding to true when set to not displaying elsewhere
-                ClientStringHelper.DisposeClientSeStringAtPtr(oldTitlePtr);
-                return true;
+                if (!handler.DisplayTitle || handler.Title.Payloads.Count <= 0)
+                {
+                    continue;
+                }
+                string before = $"Before: {handler.Title.TextValue}, prefix:{handler.IsPrefixTitle}, display:{handler.DisplayTitle}";
+                bool modified = ModifyNamePlateTitle(handler);
+
+#if DEBUG
+                if (modified)
+                {
+                    string after = $"After: {handle.TitleParts.Text.TextValue}, prefix:{handle.IsPrefixTitle}, display:{handle.DisplayTitle}";
+                    Util.LogDebug($"Modifying nameplate title:\n\t{before}\n\t{after}");
+                }
+#endif
             }
-            return false;
+        }
+
+        private unsafe bool ModifyNamePlateTitle(INamePlateUpdateHandler handle)
+        {
+            string oldTitle = handle.Title.TextValue.Trim(ClientStringHelper.TitleLeftBracket).Trim(ClientStringHelper.TitleRightBracket);
+            if (!renameMap.TryGetValue(oldTitle, out var renameEntry) || renameEntry is null || !renameEntry.RenameEnabled)
+            {
+                return false;
+            }
+            handle.TitleParts.Text = renameEntry.TitleString;
+            handle.IsPrefixTitle = renameEntry.IsPrefixTitle;
+            handle.DisplayTitle = handle.DisplayTitle && renameEntry.ToDisplay;
+            return true;
         }
 
         public void Dispose()
         {
-            DisposeHook();
+            nameplateGui.OnNamePlateUpdate -= OnNameplateUpdate;
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using TitleRenamed.Strings;
-using System;
+using Dalamud.Utility;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 
 namespace TitleRenamed.Entries
 {
-    public class TitleRenameEntry : IDisposable
+    public class TitleRenameEntry
     {
         private string renamedTitle = null!;
         public string RenamedTitle
@@ -12,15 +13,15 @@ namespace TitleRenamed.Entries
             internal set
             {
                 renamedTitle = value ?? string.Empty;
-                if (TitleString != null && !TitleString.IsDisposed)
-                    TitleString.Dispose();
-                TitleString = ClientStringHelper.CreateSeStringForNamePlateTitle(RenamedTitle);
+                TitleString = !renamedTitle.IsNullOrWhitespace()
+                    ? new SeString(new TextPayload(renamedTitle))
+                    : SeString.Empty;
             }
         }
         public bool IsPrefixTitle { get; internal set; }
         public bool ToDisplay { get; internal set; }
         public bool RenameEnabled { get; internal set; }
-        internal SeStringWrapper TitleString { get; private set; }
+        internal SeString TitleString { get; private set; } = SeString.Empty;
 
 
         public TitleRenameEntry(string renamed, bool isPrefix, bool toDisplay, bool enabled)
@@ -29,52 +30,12 @@ namespace TitleRenamed.Entries
             IsPrefixTitle = isPrefix;
             ToDisplay = toDisplay;
             RenameEnabled = enabled;
-            TitleString = ClientStringHelper.CreateSeStringForNamePlateTitle(RenamedTitle);
         }
 
         public TitleRenameEntry(TitleRenameSaveEntry entry)
             : this(entry.RenamedTitle, entry.IsPrefixTitle, entry.ToDisplay, entry.RenameEnabled) { }
 
         public override string ToString()
-            => $"RenamedTo:{RenamedTitle},IsPrefix:{IsPrefixTitle},ToDisplay:{ToDisplay},Enabled:{RenameEnabled},SeStr@{(long)TitleString.Ptr:X}";
-
-
-        #region IDisposable impl
-
-        private bool disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    //dispose managed state(managed objects)
-                    TitleString.Dispose();
-                }
-
-                // free unmanaged resources (unmanaged objects) and override finalizer
-                
-                // set large fields to null
-
-                disposedValue = true;
-            }
-        }
-
-        //// Override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        //~TitleRenameEntry()
-        //{
-        //    // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //    Dispose(disposing: false);
-        //}
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
+            => $"RenamedTo:{RenamedTitle},IsPrefix:{IsPrefixTitle},ToDisplay:{ToDisplay},Enabled:{RenameEnabled}";
     }
 }

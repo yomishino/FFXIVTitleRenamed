@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.Memory;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using System;
 using System.Text;
@@ -35,16 +35,6 @@ namespace TitleRenamed.Strings
             => ptr == IntPtr.Zero 
             ? string.Empty 
             : (GetSeStringFromPtr(ptr)?.TextValue.Trim(TitleLeftBracket).Trim(TitleRightBracket) ?? string.Empty);
-
-        public static SeStringWrapper CreateSeString(string text)
-        {
-            if (text == null)
-                throw new ArgumentNullException(paramName: nameof(text));
-            return new SeStringWrapper(text + '\0');
-        }
-
-        public static SeStringWrapper CreateSeStringForNamePlateTitle(string titleText)
-            => CreateSeString(TitleLeftBracket + titleText + TitleRightBracket);
 
         internal unsafe static void DisposeClientSeStringAtPtr(IntPtr ptr)
         {

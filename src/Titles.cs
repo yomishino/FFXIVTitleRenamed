@@ -1,4 +1,4 @@
-﻿using Lumina.Excel;
+using Lumina.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using TitleSheet = Lumina.Excel.GeneratedSheets.Title;
 
 namespace TitleRenamed
 {
-    public class Titles
+    public static class Titles
     {
         public static ExcelSheet<TitleSheet>? TitleSheet => Plugin.DataMgr.GetExcelSheet<TitleSheet>();
         
@@ -48,7 +48,7 @@ namespace TitleRenamed
         public static IEnumerable<(string, bool)> GetCurrentInputMatchedTitles(
             string input, bool ignoreCase = true, int maxResults = 10, SortedSet<(string, bool)>? titles = null)
         {
-            if (input == null) throw new ArgumentNullException(paramName: nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
             titles ??= GetAllUniqueTitleSorted();
             StringComparison rule = ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
             return titles.Where(item => item.Item1.StartsWith(input, rule)).Take(maxResults);
@@ -57,7 +57,7 @@ namespace TitleRenamed
         public static (string, bool) GetCurrentInputFirstMatchedTitle(
             string input, bool ignoreCase = true, IEnumerable<(string, bool)>? matched = null, SortedSet<(string, bool)>? titles = null)
         {
-            if (input == null) throw new ArgumentNullException(paramName: nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
             if (input == string.Empty) return ("", true);
             matched ??= GetCurrentInputMatchedTitles(input, ignoreCase, 1, titles);
             return matched.Any() ? matched.First() : ("", true);

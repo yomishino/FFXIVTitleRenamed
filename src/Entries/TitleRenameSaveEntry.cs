@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace TitleRenamed.Entries
@@ -25,7 +25,7 @@ namespace TitleRenamed.Entries
         public TitleRenameSaveEntry(string title, TitleRenameEntry entry)
         {
             Title = title ?? throw new ArgumentNullException(paramName: nameof(title));
-            if (entry == null) throw new ArgumentNullException(paramName: nameof(entry));
+            ArgumentNullException.ThrowIfNull(entry);
             RenamedTitle = entry.RenamedTitle;
             IsPrefixTitle = entry.IsPrefixTitle;
             ToDisplay = entry.ToDisplay;
